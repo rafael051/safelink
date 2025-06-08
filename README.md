@@ -40,27 +40,6 @@ spring.datasource.username=<usuario>
 spring.datasource.password=<senha>
 spring.datasource.driver-class-name=org.postgresql.Driver
 ```
-- Docker PostgreSQL local:
-```bash
-docker run --name safelink-postgres -e POSTGRES_DB=safelinkdb -e POSTGRES_USER=usuario -e POSTGRES_PASSWORD=senha -p 5432:5432 -d postgres:15-alpine
-```
-## ⚙️ Exemplo application.properties
-```properties
-spring.application.name=safelink
-spring.datasource.url=jdbc:postgresql://localhost:5432/safelinkdb
-spring.datasource.username=rm557837
-spring.datasource.password=181088
-spring.datasource.driver-class-name=org.postgresql.Driver
-spring.jpa.hibernate.ddl-auto=none
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-spring.cache.type=simple
-springdoc.swagger-ui.path=/swagger-ui.html
-springdoc.api-docs.path=/v3/api-docs
-#server.address=0.0.0.0
-#server.port=80
-```
 ## 🧩 Funcionalidades Principais
 - Autenticação usuários (JWT)
 - Cadastro e consulta alertas risco
@@ -112,14 +91,15 @@ safelink/
 Todos endpoints (exceto login) exigem autenticação JWT. Use endpoint `/auth/login` para obter token.
 ## 👀 Exemplos Endpoints
 ## 🔁 Endpoints POST
-### Criar Usuário
+```
+### Cadastrar Usuario
 ```http
 POST /users
 Content-Type: application/json
 {
-  "email": "usuario@email.com",
-  "password": "123456",
-  "role": "USER"
+  "email": "usuario@safelink.com",
+  "password": "s3nh@F0rte",
+  "role": "ADMIN"
 }
 ```
 ### Autenticar
@@ -127,54 +107,8 @@ Content-Type: application/json
 POST /login
 Content-Type: application/json
 {
-  "email": "usuario@email.com",
-  "password": "123456"
-}
-```
-### Cadastrar Alerta
-```http
-POST /alertas
-Authorization: Bearer <token>
-Content-Type: application/json
-{
-  "mensagem": "Alerta de enchente em bairro X",
-  "nivelRisco": "ALTO",
-  "dataEmissao": "2025-06-04T10:00:00",
-  "idRegiao": 1
-}
-```
-### Cadastrar Evento Natural
-```http
-POST /eventos-naturais
-Authorization: Bearer <token>
-Content-Type: application/json
-{
-  "descricao": "Tempestade severa",
-  "data": "2025-06-03T14:30:00",
-  "idRegiao": 2
-}
-```
-### Registrar Previsão de Risco
-```http
-POST /previsoes-risco
-Authorization: Bearer <token>
-Content-Type: application/json
-{
-  "nivel": "MODERADO",
-  "descricao": "Previsão de ventos fortes",
-  "data": "2025-06-04",
-  "idRegiao": 3
-}
-```
-### Criar Relato de Usuário
-```http
-POST /relatos-usuarios
-Authorization: Bearer <token>
-Content-Type: application/json
-{
-  "mensagem": "Deslizamento na encosta",
-  "idEvento": 5,
-  "idUsuario": 1
+  "email": "admin@safelink.com",
+  "password": "admin123"
 }
 ```
 ### Cadastrar Região
@@ -186,12 +120,60 @@ Content-Type: application/json
   "nome": "Zona Norte",
   "cidade": "São Paulo",
   "estado": "SP",
-  "latitude": -23.502,
-  "longitude": -46.635
+  "latitude": -23.5365,
+  "longitude": -46.6333
+}
+```
+### Cadastrar Alerta
+```http
+POST /alertas
+Authorization: Bearer <token>
+Content-Type: application/json
+{
+  "tipo": "Enchente",
+  "nivelRisco": "ALTO",
+  "mensagem": "Evacuar imediatamente a área afetada pela enchente",
+  "emitidoEm": "08/06/2025 14:00:00",
+  "idRegiao": 1
+}
+```
+### Cadastrar Evento Natural
+```http
+POST /eventos-naturais
+Authorization: Bearer <token>
+Content-Type: application/json
+{
+  "tipo": "Deslizamento",
+  "descricao": "Deslizamento de terra após fortes chuvas",
+  "dataOcorrencia": "08/06/2025 14:00:00",
+  "regiaoId": 1
+}
+```
+### Registrar Previsão de Risco
+```http
+POST /previsoes-risco
+Authorization: Bearer <token>
+Content-Type: application/json
+{
+  "nivelPrevisto": "MÉDIO",
+  "fonte": "INMET",
+  "geradoEm": "08/06/2025 14:00:00",
+  "regiaoId": 1
+}
+```
+### Criar Relato de Usuário
+```http
+POST /relatos-usuarios
+Authorization: Bearer <token>
+Content-Type: application/json
+{
+  "mensagem": "Há deslizamento parcial na encosta próxima à escola municipal.",
+  "dataRelato": "08/06/2025 14:00:00",
+  "regiaoId": 1
 }
 ```
 ## 📝 Licença
 Projeto acadêmico — sem fins lucrativos.
 ## ✉️ Contato
-- rafael.XXXXXX@fiap.com.br
-- lucas.XXXXXX@fiap.com.br
+- rm557837@fiap.com.br
+- rm555368@fiap.com.br
